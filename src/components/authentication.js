@@ -10,8 +10,8 @@ const Authentication = () => {
   const dispatch = useDispatch(); 
 
   // Retrieve Redux state values
-  const loggedIn = useSelector((state) => state.auth.loggedIn);
-  const username = useSelector((state) => state.auth.username);
+  const loggedIn = useSelector((state) => state.auth?.loggedIn);
+  const username = useSelector((state) => state.auth?.username);
 
   // Switch tabs when user selects a tab
   const handleSelect = (selectedKey) => {
