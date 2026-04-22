@@ -11,7 +11,7 @@ function MovieList() {
 
     // Memoize the movies array
     const memoizedMovies = useMemo(() => {
-        return movies;
+        return movies || []; // Safe fallback to empty array
     }, [movies]);
 
     useEffect(() => {
@@ -19,7 +19,6 @@ function MovieList() {
     }, [dispatch]);
 
     const handleSelect = (selectedIndex) => {
-        // Use memoizedMovies here
         dispatch(setMovie(memoizedMovies[selectedIndex]));
     };
 
@@ -27,7 +26,7 @@ function MovieList() {
         dispatch(setMovie(movie));
     };
 
-    if (!memoizedMovies) { // Use memoizedMovies here
+    if (!movies || movies.length === 0) { 
         return <div>Loading....</div>;
     }
 
@@ -35,22 +34,27 @@ function MovieList() {
         <Carousel onSelect={handleSelect} className="bg-dark text-light p-4 rounded">
           {memoizedMovies.map((movie) => (
             <Carousel.Item key={movie._id}>
-              {/* Use Nav.Link with "as={Link}" to avoid nested anchors */}
               <Nav.Link
                 as={Link}
                 to={`/movie/${movie._id}`}
                 onClick={() => handleClick(movie)}
               >
-                <Image className="image" src={movie.imageUrl} thumbnail />
+                <Image 
+    className="image" 
+    src={movie.imageUrl ? movie.imageUrl : "https://placehold.co/300x450/212529/FFF?text=No+Poster"} 
+    thumbnail 
+    style={{ maxHeight: '400px', objectFit: 'cover', width: '100%' }}
+/>
               </Nav.Link>
               <Carousel.Caption>
                 <h3>{movie.title}</h3>
-                <BsStarFill /> {movie.avgRating} &nbsp;&nbsp; {movie.releaseDate}
+                {/* Format the rating so it looks clean */}
+                <BsStarFill /> {movie.avgRating ? Number(movie.avgRating).toFixed(1) : 'No Ratings'} &nbsp;&nbsp; {movie.releaseDate}
               </Carousel.Caption>
             </Carousel.Item>
           ))}
         </Carousel>
       );
-    }
+}
 
 export default MovieList;
